@@ -1,0 +1,204 @@
+########################
+ README
+########################
+
+NOTE:- All the file paths in the commands are relative to the home directory of 
+the Assignment1 (Directory containing this README).
+
+
+
+Part I Webserver:-
+------------------------
+This is the webserver that is going to handle both persistent and 
+non-persistent connections.
+
+To execute the webserver:-
+
+# cd Part_I_Webserver
+# gcc -o webserver webserver.c
+# ./webserver <port_number>
+
+Server started. Listening for connections on port <port_number>...
+
+Note:- If you stop and re- run the web server on the same port, you may face an 
+intermittent binding issue with the socket. In this case, simply use another 
+port.
+
+
+
+
+
+Part II Web-Client:-
+------------------------
+This is a client program for persistent and non-persistent connections to the 
+webserver in Part I.
+
+Prerequisite to run this is the webserver in Part I must be running.
+
+Format to execute the client:-
+
+# webclient <HOST> <PORT> <TYPE_OF_CONN> <FILE>
+
+HOST- Host on which the server is running
+
+PORT- Port on which the server is running
+
+TYPE_OF_CONN- This value can be either 'np' for non-persistent and 'p' for 
+persistent
+
+FILE- In case of np connection, it is the file to request from the server. In 
+case of 'p' connection, it is the file on the client (relative to the current 
+directory of program execution), containing the list of files to request from 
+server.
+
+NOTE:- Please execute the server and client in two different directories. 
+Running it in same directory causes both server and client to race for the same 
+files.
+
+To execute the web-client:-
+
+# cd Part_II_Webclient
+# gcc -o webclient webclient.c
+# ./webclient <HOST> <PORT> <TYPE_OF_CONN> <FILE>
+
+Example:-
+
+Note:- mango.txt is the file present on the server (i.e. in the directory from 
+which the server runs).
+
+$ ./webclient localhost 2223 np mango.txt
+
+Request: GET /mango.txt HTTP/1.1
+From: mango@xxx.com
+Connection: close
+
+Response:-
+HTTP/1.1 200 OK
+Server: mangolap
+
+ 
+// Note: This function returns a pointer to a substring of the original string.
+// If the given string was allocated dynamically, the caller must not overwrite
+// that pointer with the returned value, since the original pointer must be
+// deallocated using the same allocator with which it was allocated.  The return
+// value must NOT be deallocated using free() etc.
+
+mango.txt file content:-
+
+ 
+// Note: This function returns a pointer to a substring of the original string.
+// If the given string was allocated dynamically, the caller must not overwrite
+// that pointer with the returned value, since the original pointer must be
+// deallocated using the same allocator with which it was allocated.  The return
+// value must NOT be deallocated using free() etc.
+
+Request sent at: 1442780844 seconds and 866112 microseconds
+
+Last response received at: 1442780844 seconds and 875289 microseconds
+
+
+
+
+
+Part III UDP Server and Client
+----------------------------------
+This is the UDP version of the webserver and webclient.
+
+Run the webserver as follows:-
+
+# cd Part_III_UDP_Server_Client
+# gcc -o webserver_udp webserver_udp.c
+# ./webserver_udp <port_number>
+
+Server started. Waiting for datagram requests...
+
+Run the webclient as follows:-
+(Prerequisite server running)
+
+# cd Part_III_UDP_Server_Client/client
+# gcc -o webclient_udp webclient_udp.c
+# ./webclient_udp <host> <port_number> <filename>
+
+NOTE:- There are no 'p' or 'np' connections in UDP.
+
+Example:-
+
+Note:- helloworld.html is the file present on the server (i.e. in the directory 
+from which the server runs).
+
+#./webclient_udp localhost 2222 helloworld.html
+
+Request: GET /helloworld.html HTTP/1.1
+
+Number of bytes received: 142
+Response:-
+HTTP/1.1 200 OK
+Server: mangolap
+
+<html>
+  <head>
+    <h1>Hello</h1>
+  </head>
+  <body>
+    <p>This is a sample html</p>
+  </body>
+</html>
+
+
+helloworld.html file content:-
+
+<html>
+  <head>
+    <h1>Hello</h1>
+  </head>
+  <body>
+    <p>This is a sample html</p>
+  </body>
+</html>
+
+
+Request sent at: 1442781742 seconds and 584566 microseconds
+
+Last response received at: 1442781742 seconds and 590064 microseconds
+
+
+
+
+
+Part IV Multi- threaded server
+-------------------------------------
+This contains the multi- threaded version of the the web server. The client 
+essentially remains the same, though it does not contain the 'p' and 'np' 
+options. The problem statement said that each request/ response pair should be 
+on a separate connection thread.
+
+
+Run the webserver as follows:-
+
+# cd Part_IV_Pthreads
+# gcc -pthread -o webserver_pthreads webserver_pthreads.c   //Note the -pthread option
+# ./webserver_pthreads <port_number>
+
+
+Run the webclient as follows:-
+(Prerequisite server running)
+
+# cd Part_IV_Pthreads/client
+# gcc -o webclient_pthreads webclient_pthreads.c
+# /webclient_pthreads <host> <port_number> <filename>
+
+Example:-
+
+(ENV)[mangirish@MangoLap client]$ ./webclient_pthreads localhost 2227 jjj.txt
+
+Request: GET /jjj.txt HTTP/1.1
+Response:-
+HTTP/1.1 404 Not Found
+Server: mangolap
+
+<html><h1>404: File Not Found</h1></html>
+
+
+Request sent at: 1442783061 seconds and 987956 microseconds
+
+Last response received at: 1442783061 seconds and 991596 microseconds
